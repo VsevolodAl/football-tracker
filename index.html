@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Футбольный трекер · 2026/27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --transition: 0.55s cubic-bezier(0.4,0,0.2,1); }
+html { height: 100%; }
+body {
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+  transition: background var(--transition);
+}
+body.club-arsenal { background: linear-gradient(145deg, #EF0107 0%, #B00005 50%, #063672 100%); }
+body.club-spartak  { background: linear-gradient(140deg, #ffffff 0%, #C8102E 18%, #8B0000 65%, #4a0000 100%); }
+body.club-fakel    { background: linear-gradient(135deg, #005B99 0%, #003F72 45%, #001f3f 100%); }
+
+.page { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── Header ── */
+.header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 1.25rem;
+  margin-bottom: 2rem; flex-wrap: wrap;
+}
+.header-identity { display: flex; align-items: center; gap: 1.1rem; }
+.header-crest {
+  width: 72px; height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+  transition: opacity 0.4s, transform 0.4s;
+  flex-shrink: 0;
+}
+.header-crest.loading { opacity: 0; transform: scale(0.85); }
+.header-text h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 6.5vw, 3.4rem);
+  letter-spacing: .04em; line-height: 1; color: #fff;
+  text-shadow: 0 2px 20px rgba(0,0,0,.35);
+}
+.season-tag {
+  display: inline-block; margin-top: 5px;
+  font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.55); background: rgba(255,255,255,.1);
+  padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,.15);
+}
+.updated-tag { display: inline-block; margin-top: 3px; margin-left: 6px; font-size: .68rem; color: rgba(255,255,255,.35); }
+
+/* ── Club buttons ── */
+.club-selector { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; padding-top: 4px; }
+.club-btn {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 16px 9px 10px;
+  border-radius: 40px; border: 1.5px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.1); backdrop-filter: blur(8px);
+  color: rgba(255,255,255,.75); font-family: 'Inter', sans-serif;
+  font-size: .875rem; font-weight: 500; cursor: pointer;
+  transition: all .22s; white-space: nowrap;
+}
+.club-btn:hover { background: rgba(255,255,255,.19); color: #fff; border-color: rgba(255,255,255,.5); }
+.club-btn.active {
+  background: rgba(255,255,255,.24); color: #fff;
+  border-color: rgba(255,255,255,.7);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.1), 0 2px 12px rgba(0,0,0,.2);
+}
+.btn-crest {
+  width: 26px; height: 26px; object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.3));
+  flex-shrink: 0;
+}
+.btn-crest-fallback {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,.4);
+}
+.badge { font-size: .65rem; opacity: .6; font-weight: 400; }
+
+/* ── Glass ── */
+.glass {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.17);
+  border-radius: 18px; backdrop-filter: blur(10px);
+  transition: background .2s;
+}
+.glass:hover { background: rgba(255,255,255,.14); }
+
+/* ── Stats ── */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 12px; margin-bottom: 1.75rem; }
+.stat-card { padding: 1.1rem 1.25rem; }
+.stat-label { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 6px; }
+.stat-value { font-family: 'Bebas Neue',sans-serif; font-size: 2.2rem; letter-spacing: .02em; color: #fff; line-height: 1; }
+.stat-sub { font-size: .72rem; color: rgba(255,255,255,.45); margin-top: 5px; }
+.stat-na { font-size: 1.6rem; font-family: 'Bebas Neue',sans-serif; color: rgba(255,255,255,.3); }
+
+/* ── Next match ── */
+.next-match-card { padding: 1.5rem; margin-bottom: 1.75rem; border-radius: 20px; }
+.nm-label { display: flex; align-items: center; gap: 8px; font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 1rem; }
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: pulse 2s infinite; flex-shrink: 0; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.8)} }
+.match-teams { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.match-team-block { flex: 1; display: flex; align-items: center; gap: 10px; }
+.match-team-block.away { flex-direction: row-reverse; text-align: right; }
+.match-crest { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,.3)); flex-shrink: 0; }
+.match-team-name { font-size: clamp(.95rem,2.5vw,1.2rem); font-weight: 600; color: #fff; }
+.match-vs { font-family: 'Bebas Neue',sans-serif; font-size: 1.6rem; color: rgba(255,255,255,.35); flex-shrink: 0; letter-spacing: .05em; }
+.match-meta { display: flex; flex-wrap: wrap; gap: 14px; font-size: .8rem; color: rgba(255,255,255,.55); }
+.match-meta .home-tag { color: rgba(255,255,255,.9); font-weight: 500; }
+.prob-bar { display: flex; height: 5px; border-radius: 3px; overflow: hidden; margin-top: 12px; gap: 2px; }
+.prob-w { background: rgba(255,255,255,.85); }
+.prob-d { background: rgba(255,255,255,.35); }
+.prob-l { background: rgba(255,255,255,.12); }
+.prob-labels { display: flex; justify-content: space-between; font-size: .68rem; color: rgba(255,255,255,.4); margin-top: 5px; }
+
+/* ── Section ── */
+.section { margin-bottom: 1.75rem; }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: .875rem; }
+.section-title { font-family: 'Bebas Neue',sans-serif; font-size: 1.4rem; letter-spacing: .06em; color: #fff; white-space: nowrap; }
+.section-rule { flex: 1; height: 1px; background: rgba(255,255,255,.15); }
+
+/* ── Tourn tabs ── */
+.tourn-tabs { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+.tourn-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: rgba(255,255,255,.55); font-size: .8rem; cursor: pointer; font-family: 'Inter',sans-serif; transition: all .15s; }
+.tourn-btn:hover { background: rgba(255,255,255,.1); color: #fff; }
+.tourn-btn.active { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.5); }
+
+/* ── Games list ── */
+.games-list { display: flex; flex-direction: column; gap: 6px; }
+.game-row { display: flex; align-items: center; gap: 10px; padding: 9px 13px; border-radius: 12px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); font-size: .85rem; transition: background .15s; }
+.game-row:hover { background: rgba(255,255,255,.13); }
+.game-date { font-size: .72rem; color: rgba(255,255,255,.4); min-width: 64px; flex-shrink: 0; }
+.game-teams-wrap { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.game-crest { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; opacity: .9; }
+.game-team { flex: 1; color: rgba(255,255,255,.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.game-team.bold { color: #fff; font-weight: 600; }
+.game-team.right { text-align: right; }
+.score-pill { padding: 2px 10px; border-radius: 8px; font-size: .78rem; font-weight: 600; flex-shrink: 0; min-width: 34px; text-align: center; }
+.s-future { background: rgba(255,255,255,.1);  color: rgba(255,255,255,.35); }
+.s-win    { background: rgba(50,180,90,.35);   color: #90f0b0; }
+.s-draw   { background: rgba(240,190,50,.3);   color: #fde880; }
+.s-loss   { background: rgba(240,50,50,.3);    color: #ffaaaa; }
+.venue-badge { font-size: .65rem; padding: 1px 6px; border-radius: 4px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.4); flex-shrink: 0; }
+.prob-hint { font-size: .7rem; color: rgba(255,255,255,.3); flex-shrink: 0; }
+.footer-note { margin-top: 8px; font-size: .7rem; color: rgba(255,255,255,.3); }
+
+/* ── Standings ── */
+.standings-wrap { border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); }
+.standings-info { padding: .75rem 1rem; font-size: .8rem; color: rgba(255,255,255,.5); background: rgba(0,0,0,.15); border-bottom: 1px solid rgba(255,255,255,.08); }
+.standings-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.standings-table thead th { padding: 8px 10px; background: rgba(0,0,0,.2); color: rgba(255,255,255,.38); font-weight: 400; font-size: .68rem; letter-spacing: .07em; text-transform: uppercase; text-align: right; }
+.standings-table thead th:nth-child(1) { text-align: center; width: 28px; }
+.standings-table thead th:nth-child(2) { text-align: left; width: 24px; }
+.standings-table thead th:nth-child(3) { text-align: left; }
+.standings-table tbody tr { border-top: 1px solid rgba(255,255,255,.06); transition: background .15s; }
+.standings-table tbody tr:hover { background: rgba(255,255,255,.07); }
+.standings-table tbody tr.hl { background: rgba(255,255,255,.14); }
+.standings-table tbody td { padding: 7px 10px; color: rgba(255,255,255,.6); text-align: right; }
+.standings-table tbody td:nth-child(1) { text-align: center; color: rgba(255,255,255,.3); }
+.standings-table tbody td:nth-child(2) { text-align: center; padding: 4px 6px; }
+.standings-table tbody td:nth-child(3) { text-align: left; color: rgba(255,255,255,.85); }
+.standings-table tbody tr.hl td { color: rgba(255,255,255,.88); }
+.standings-table tbody tr.hl td:nth-child(3) { color: #fff; font-weight: 600; }
+.st-crest { width: 18px; height: 18px; object-fit: contain; vertical-align: middle; }
+.zone-pip { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
+.z-cl { background: #4AE08A; } .z-el { background: #4AB0F0; } .z-rel { background: #F06060; }
+.standings-legend { display: flex; gap: 16px; padding: 8px 12px; background: rgba(0,0,0,.15); font-size: .7rem; color: rgba(255,255,255,.38); border-top: 1px solid rgba(255,255,255,.06); }
+.standings-legend span { display: flex; align-items: center; gap: 5px; }
+
+/* ── Info / no-data ── */
+.info-banner { background: rgba(0,0,0,.18); border: 1px solid rgba(255,255,255,.15); border-radius: 14px; padding: 1rem 1.25rem; font-size: .85rem; color: rgba(255,255,255,.7); line-height: 1.6; margin-bottom: 1.75rem; display: flex; gap: 10px; align-items: flex-start; }
+.info-banner strong { color: #fff; }
+.no-data { padding: 2rem 1rem; text-align: center; color: rgba(255,255,255,.38); font-size: .85rem; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
+.no-data strong { display: block; color: rgba(255,255,255,.55); margin-bottom: 5px; font-size: .95rem; }
+
+/* ── Loading ── */
+#loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 40vh; gap: 12px; color: rgba(255,255,255,.5); font-size: .9rem; }
+.spinner { width: 32px; height: 32px; border: 2px solid rgba(255,255,255,.15); border-top-color: rgba(255,255,255,.7); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width:580px) {
+  .page { padding: 1.25rem 1rem 3rem; }
+  .header { flex-direction: column; gap: .75rem; }
+  .header-crest { width: 56px; height: 56px; }
+  .match-crest { width: 30px; height: 30px; }
+  .match-team-name { font-size: .9rem; }
+  .standings-table { font-size: .75rem; }
+  .standings-table thead th, .standings-table tbody td { padding: 5px 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body, .header-crest { transition: none !important; }
+  .pulse, .spinner { animation: none; }
+}
+</style>
+</head>
+<body class="club-arsenal">
+<div class="page">
+  <div class="header">
+    <div class="header-identity">
+      <img id="headerCrest" class="header-crest loading" alt="Эмблема клуба" src="">
+      <div class="header-text">
+        <h1 id="clubTitle">Арсенал</h1>
+        <span class="season-tag" id="clubSeason">АПЛ · Сезон 2026/27</span>
+        <span class="updated-tag" id="updatedAt"></span>
+      </div>
+    </div>
+    <div class="club-selector" id="clubSelector"></div>
+  </div>
+  <div id="mainContent">
+    <div id="loading"><div class="spinner"></div><span>Загружаем данные…</span></div>
+  </div>
+</div>
+
+<script>
+let DATA = null;
+let activeClub = 'arsenal';
+let activeTournament = null;
+
+// ── crest cache: id → URL (from API or fallback) ──────────────────────────
+const crestCache = {};
+
+function crestImg(url, cls, alt, size) {
+  if (!url) return `<span style="display:inline-block;width:${size}px;height:${size}px;"></span>`;
+  return `<img src="${url}" class="${cls}" alt="${alt}" loading="lazy" onerror="this.style.opacity='0'">`;
+}
+
+// ── Load ──────────────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch(`data/clubs.json?v=${Date.now()}`);
+    if (!res.ok) throw new Error(res.status);
+    DATA = await res.json();
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      `<div class="no-data"><strong>Не удалось загрузить данные</strong>Проверьте соединение и обновите страницу</div>`;
+    return;
+  }
+  if (DATA.updated) {
+    const d = new Date(DATA.updated);
+    document.getElementById('updatedAt').textContent =
+      `обновлено ${d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})} ${d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
+  }
+  buildClubButtons();
+  activeTournament = DATA.clubs[activeClub].tournaments[0];
+  applyTheme(activeClub);
+  render();
+}
+
+// ── Theme ─────────────────────────────────────────────────────────────────
+function applyTheme(id) {
+  const club = DATA.clubs[id];
+  document.body.className = club.bodyClass;
+  const img = document.getElementById('headerCrest');
+  img.classList.add('loading');
+  img.src = club.crest || '';
+  img.alt = club.name;
+  img.onload = () => img.classList.remove('loading');
+  img.onerror = () => { img.style.display = 'none'; };
+  document.getElementById('clubTitle').textContent = club.name;
+  document.getElementById('clubSeason').textContent = club.league;
+}
+
+// ── Club buttons ──────────────────────────────────────────────────────────
+function buildClubButtons() {
+  const el = document.getElementById('clubSelector');
+  el.innerHTML = Object.entries(DATA.clubs).map(([id, c]) => `
+    <button class="club-btn ${id===activeClub?'active':''}" data-club="${id}">
+      ${c.crest
+        ? `<img src="${c.crest}" class="btn-crest" alt="${c.name}" onerror="this.style.opacity='0'">`
+        : `<span class="btn-crest-fallback" style="background:${c.swatchColor}"></span>`}
+      ${c.name.split(' ')[0]}
+      <span class="badge">${c.league.split('·')[0].trim()}</span>
+    </button>`).join('');
+  el.querySelectorAll('.club-btn').forEach(b =>
+    b.addEventListener('click', () => selectClub(b.dataset.club)));
+}
+
+function selectClub(id) {
+  activeClub = id;
+  activeTournament = DATA.clubs[id].tournaments[0];
+  document.querySelectorAll('.club-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.club === id));
+  applyTheme(id);
+  render();
+}
+function selectTournament(t) { activeTournament = t; render(); }
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function isClub(name) {
+  if (activeClub==='arsenal') return /arsenal/i.test(name);
+  if (activeClub==='spartak') return /spartak|спартак/i.test(name);
+  if (activeClub==='fakel')   return /fakel|факел/i.test(name);
+}
+function scoreClass(g) {
+  if (!g.score) return 's-future';
+  return g.result==='win' ? 's-win' : g.result==='draw' ? 's-draw' : 's-loss';
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+function render() {
+  const club  = DATA.clubs[activeClub];
+  const games = (club.games||{})[activeTournament] || [];
+  const next  = games.find(g => !g.score) || null;
+  let html = '';
+
+  // info banner
+  if (club.hasRussian && !club.hasData) {
+    html += `<div class="info-banner">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0;margin-top:2px;opacity:.6">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
+      </svg>
+      <div><strong>Данных за сезон 2026/27 пока нет.</strong><br>
+      ${club.noLeagueNote ? club.noLeagueNote+'<br>' : ''}
+      Расписание появится после официального объявления РПЛ.</div>
+    </div>`;
+  }
+
+  // stat cards
+  const played = games.filter(g=>g.score).length;
+  const pts    = games.reduce((a,g)=> a+(g.result==='win'?3:g.result==='draw'?1:0), 0);
+  const posRow = club.standings?.teams?.find(r=>r.highlight);
+  const pos    = posRow ? posRow.pos : '—';
+  html += `<div class="stats-row">
+    <div class="glass stat-card">
+      <div class="stat-label">Место в таблице</div>
+      ${pos!=='—' ? `<div class="stat-value">${pos}</div>` : `<div class="stat-na">—</div>`}
+      <div class="stat-sub">${pos==='—' ? 'Сезон не начался' : club.league}</div>
+    </div>
+    <div class="glass stat-card">
+      <div class="stat-label">Очков набрано</div>
+      ${played>0 ? `<div class="stat-value">${pts}</div>` : `<div class="stat-na">—</div>`}
+      <div class="stat-sub">${played>0 ? `за ${played} матчей` : club.hasData ? 'Старт 21 авг 2026' : 'Нет данных'}</div>
+    </div>
+    <div class="glass stat-card">
+      <div class="stat-label">Матчей сыграно</div>
+      <div class="stat-value">${played}</div>
+      <div class="stat-sub">из ${games.length||'?'}</div>
+    </div>
+  </div>`;
+
+  // next match
+  if (next) {
+    const pw=next.prob?.w??'', pd=next.prob?.d??'', pl=next.prob?.l??'';
+    // try to find opponent crest from standings table
+    const opponentName = next.homeGame ? next.away : next.home;
+    const opRow = club.standings?.teams?.find(r => r.name && r.name.toLowerCase().includes(opponentName.toLowerCase().split(' ')[0].toLowerCase()));
+    const opCrest = opRow?.crest || null;
+    const clubCrest = club.crest || null;
+    const homeCrest = next.homeGame ? clubCrest : opCrest;
+    const awayCrest = next.homeGame ? opCrest : clubCrest;
+    html += `<div class="section">
+      <div class="section-header"><div class="section-title">Ближайший матч</div><div class="section-rule"></div></div>
+      <div class="glass next-match-card">
+        <div class="nm-label"><span class="pulse"></span>Следующая игра · ${next.date} 2026</div>
+        <div class="match-teams">
+          <div class="match-team-block">
+            ${homeCrest ? `<img src="${homeCrest}" class="match-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}
+            <span class="match-team-name">${next.home}</span>
+          </div>
+          <div class="match-vs">VS</div>
+          <div class="match-team-block away">
+            ${awayCrest ? `<img src="${awayCrest}" class="match-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}
+            <span class="match-team-name">${next.away}</span>
+          </div>
+        </div>
+        <div class="match-meta">
+          <span class="${next.homeGame?'home-tag':''}">${next.homeGame?'🏠 Домашняя':'✈️ Выездная'}</span>
+          ${pw!=='' ? `<span>Победа ${pw}% · Ничья ${pd}% · Поражение ${pl}%</span>` : ''}
+        </div>
+        ${pw!=='' ? `<div class="prob-bar">
+          <div class="prob-w" style="width:${pw}%"></div>
+          <div class="prob-d" style="width:${pd}%"></div>
+          <div class="prob-l" style="width:${pl}%"></div>
+        </div>
+        <div class="prob-labels"><span>Победа ${pw}%</span><span>Ничья ${pd}%</span><span>Поражение ${pl}%</span></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // calendar
+  html += `<div class="section">
+    <div class="section-header"><div class="section-title">Календарь</div><div class="section-rule"></div></div>
+    <div class="tourn-tabs">
+      ${club.tournaments.map(t=>`<button class="tourn-btn ${activeTournament===t?'active':''}" onclick="selectTournament('${t}')">${t}</button>`).join('')}
+    </div>`;
+  if (!games.length) {
+    html += `<div class="no-data"><strong>Расписание не опубликовано</strong>Данные появятся ближе к старту сезона</div>`;
+  } else {
+    html += `<div class="games-list">` + games.map(g => {
+      const hc = isClub(g.home), ac = isClub(g.away);
+      // get crests: club crest for the club side, try standings for opponent
+      const oppName  = hc ? g.away : g.home;
+      const oppRow   = club.standings?.teams?.find(r => r.name && r.name.toLowerCase().includes(oppName.toLowerCase().split(' ')[0]));
+      const oppCrest = oppRow?.crest || null;
+      const leftCrest  = hc ? club.crest : oppCrest;
+      const rightCrest = ac ? club.crest : oppCrest;
+      return `<div class="game-row">
+        <div class="game-date">${g.date}</div>
+        <div class="game-teams-wrap">
+          ${leftCrest ? `<img src="${leftCrest}" class="game-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}
+          <div class="game-team ${hc?'bold':''}" title="${g.home}">${g.home}</div>
+          <div class="score-pill ${scoreClass(g)}">${g.score||'—'}</div>
+          <div class="game-team right ${ac?'bold':''}" title="${g.away}">${g.away}</div>
+          ${rightCrest ? `<img src="${rightCrest}" class="game-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}
+        </div>
+        <span class="venue-badge">${g.homeGame?'Д':'В'}</span>
+        ${g.prob ? `<span class="prob-hint">${g.prob.w}%</span>` : ''}
+        ${g.note ? `<span style="font-size:.7rem;color:rgba(255,255,255,.35);flex-shrink:0">${g.note}</span>` : ''}
+      </div>`;
+    }).join('') + `</div>
+    <p class="footer-note">Д — домашняя, В — выездная · % — вероятность победы</p>`;
+  }
+  html += `</div>`;
+
+  // standings
+  html += `<div class="section">
+    <div class="section-header"><div class="section-title">Таблица · ${activeTournament}</div><div class="section-rule"></div></div>`;
+  const st = club.standings;
+  if (st?.teams?.length) {
+    html += `<div class="standings-wrap">
+      <div class="standings-info">⏳ ${st.note}</div>
+      <table class="standings-table">
+        <thead><tr><th>#</th><th></th><th>Команда</th><th>О</th><th>В</th><th>Н</th><th>П</th></tr></thead>
+        <tbody>${st.teams.map(t=>`<tr class="${t.highlight?'hl':''}">
+          <td>${t.zone?`<span class="zone-pip z-${t.zone}"></span>`:''}${t.pos}</td>
+          <td>${t.crest ? `<img src="${t.crest}" class="st-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}</td>
+          <td>${t.name}</td>
+          <td>${t.pts}</td><td>${t.w}</td><td>${t.d}</td><td>${t.l}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+      <div class="standings-legend">
+        <span><span class="zone-pip z-cl"></span>ЛЧ</span>
+        <span><span class="zone-pip z-el"></span>ЛЕ</span>
+        <span><span class="zone-pip z-rel"></span>Вылет</span>
+      </div>
+    </div>`;
+  } else {
+    html += `<div class="no-data"><strong>Таблица недоступна</strong>${st?.note||'Данных нет'}</div>`;
+  }
+  html += `</div>`;
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+loadData();
+</script>
+</body>
+</html>
