@@ -1,0 +1,81 @@
+{
+  "updated": "2026-06-27T06:00:00+00:00",
+  "clubs": {
+    "arsenal": {
+      "name": "Арсенал",
+      "league": "АПЛ · Сезон 2026/27",
+      "bodyClass": "club-arsenal",
+      "swatchColor": "#EF0107",
+      "crest": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
+      "hasData": true,
+      "hasRussian": false,
+      "noLeagueNote": null,
+      "tournaments": ["АПЛ 26/27"],
+      "games": {
+        "АПЛ 26/27": [
+          {"date":"21 авг","home":"Arsenal FC","away":"Coventry City","homeGame":true,"score":null,"result":null,"prob":{"w":82,"d":12,"l":6}},
+          {"date":"29 авг","home":"Aston Villa","away":"Arsenal FC","homeGame":false,"score":null,"result":null,"prob":{"w":42,"d":26,"l":32}},
+          {"date":"5 сен","home":"Arsenal FC","away":"Chelsea FC","homeGame":true,"score":null,"result":null,"prob":{"w":54,"d":21,"l":25}},
+          {"date":"12 сен","home":"Sunderland AFC","away":"Arsenal FC","homeGame":false,"score":null,"result":null,"prob":{"w":50,"d":28,"l":22}},
+          {"date":"19 сен","home":"Brighton","away":"Arsenal FC","homeGame":false,"score":null,"result":null,"prob":{"w":42,"d":27,"l":31}},
+          {"date":"10 окт","home":"Arsenal FC","away":"Leeds United","homeGame":true,"score":null,"result":null,"prob":{"w":68,"d":18,"l":14}},
+          {"date":"17 окт","home":"Nottm Forest","away":"Arsenal FC","homeGame":false,"score":null,"result":null,"prob":{"w":45,"d":27,"l":28}},
+          {"date":"24 окт","home":"Arsenal FC","away":"Everton FC","homeGame":true,"score":null,"result":null,"prob":{"w":71,"d":17,"l":12}},
+          {"date":"31 окт","home":"Liverpool FC","away":"Arsenal FC","homeGame":false,"score":null,"result":null,"prob":{"w":33,"d":24,"l":43}},
+          {"date":"7 ноя","home":"Arsenal FC","away":"Hull City","homeGame":true,"score":null,"result":null,"prob":{"w":79,"d":13,"l":8}}
+        ]
+      },
+      "standings": {
+        "note": "Сезон 26/27 стартует 21 августа — таблица пустая",
+        "teams": [
+          {"pos":"—","name":"AFC Bournemouth","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Arsenal FC","crest":"https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg","pts":"—","w":"—","d":"—","l":"—","zone":null,"highlight":true},
+          {"pos":"—","name":"Aston Villa","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Brentford FC","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Brighton & H. Albion","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Chelsea FC","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Coventry City","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Crystal Palace","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Everton FC","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Fulham FC","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Hull City","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Ipswich Town","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Leeds United","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Liverpool FC","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Manchester City","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Manchester United","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Newcastle United","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Nottingham Forest","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Sunderland AFC","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null},
+          {"pos":"—","name":"Tottenham Hotspur","crest":null,"pts":"—","w":"—","d":"—","l":"—","zone":null}
+        ]
+      }
+    },
+    "spartak": {
+      "name": "Спартак Москва",
+      "league": "РПЛ · Сезон 2026/27",
+      "bodyClass": "club-spartak",
+      "swatchColor": "#C8102E",
+      "crest": "https://upload.wikimedia.org/wikipedia/en/5/50/FC_Spartak_Moscow.svg",
+      "hasData": false,
+      "hasRussian": true,
+      "noLeagueNote": null,
+      "tournaments": ["РПЛ 26/27", "Кубок России 26/27"],
+      "games": {"РПЛ 26/27": [], "Кубок России 26/27": []},
+      "standings": {"note": "Расписание РПЛ 26/27 пока не опубликовано", "teams": []}
+    },
+    "fakel": {
+      "name": "Факел Воронеж",
+      "league": "РПЛ · Сезон 2026/27",
+      "bodyClass": "club-fakel",
+      "swatchColor": "#005B99",
+      "crest": "https://upload.wikimedia.org/wikipedia/en/f/f6/FC_Fakel_Voronezh.svg",
+      "hasData": false,
+      "hasRussian": true,
+      "noLeagueNote": "По данным Wikipedia, Факел возвращается в РПЛ в сезоне 2026/27.",
+      "tournaments": ["РПЛ 26/27", "Кубок России 26/27"],
+      "games": {"РПЛ 26/27": [], "Кубок России 26/27": []},
+      "standings": {"note": "Расписание РПЛ 26/27 пока не опубликовано", "teams": []}
+    }
+  }
+}

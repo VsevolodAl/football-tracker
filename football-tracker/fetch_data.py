@@ -1,0 +1,310 @@
+#!/usr/bin/env python3
+"""
+Fetches Arsenal (EPL), Spartak, and Fakel data → data/clubs.json
+APIs used:
+  - football-data.org       (free, EPL) → env FOOTBALLDATA_KEY
+  - dashboard.api-football.com (free, RPL) → env APIFOOTBALL_KEY
+Club crests come straight from the API responses — no manual URLs needed.
+"""
+
+import os, json, urllib.request, urllib.error
+from datetime import datetime, timezone
+
+FD_KEY  = os.environ.get("FOOTBALLDATA_KEY", "")
+AF_KEY  = os.environ.get("APIFOOTBALL_KEY", "")   # from dashboard.api-football.com
+NOW     = datetime.now(timezone.utc).isoformat()
+SEASON  = 2026
+
+CLUBS_META = {
+    "arsenal": {
+        "name": "Арсенал",
+        "league": "АПЛ · Сезон 2026/27",
+        "bodyClass": "club-arsenal",
+        "swatchColor": "#EF0107",
+        "fd_team_id": 57,
+        "fd_competition": "PL",
+        "rf_team_id": 42,       # Arsenal on api-football
+        "rf_league_id": 39,
+        "tournaments": ["АПЛ 26/27"],
+        "hasRussian": False,
+        "noLeagueNote": None,
+    },
+    "spartak": {
+        "name": "Спартак Москва",
+        "league": "РПЛ · Сезон 2026/27",
+        "bodyClass": "club-spartak",
+        "swatchColor": "#C8102E",
+        "rf_team_id": 2673,
+        "rf_league_id": 235,
+        "tournaments": ["РПЛ 26/27", "Кубок России 26/27"],
+        "hasRussian": True,
+        "noLeagueNote": None,
+    },
+    "fakel": {
+        "name": "Факел Воронеж",
+        "league": "РПЛ · Сезон 2026/27",
+        "bodyClass": "club-fakel",
+        "swatchColor": "#005B99",
+        "rf_team_id": 2695,
+        "rf_league_id": 235,
+        "tournaments": ["РПЛ 26/27", "Кубок России 26/27"],
+        "hasRussian": True,
+        "noLeagueNote": "По данным Wikipedia, Факел возвращается в РПЛ в сезоне 2026/27.",
+    },
+}
+
+# ── helpers ──────────────────────────────────────────────────────────────────
+
+def fetch_json(url, headers=None):
+    req = urllib.request.Request(url, headers=headers or {})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return json.loads(r.read())
+    except Exception as e:
+        print(f"  [WARN] {url} → {e}")
+        return None
+
+def fmt_date(iso):
+    MONTHS = ["янв","фев","мар","апр","май","июн",
+              "июл","авг","сен","окт","ноя","дек"]
+    try:
+        dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+        return f"{dt.day} {MONTHS[dt.month-1]}"
+    except Exception:
+        return iso[:10]
+
+def result_tag(hs, as_, is_home):
+    if hs is None or as_ is None:
+        return None
+    if is_home:
+        return "win" if hs > as_ else "draw" if hs == as_ else "loss"
+    return "win" if as_ > hs else "draw" if hs == as_ else "loss"
+
+# ── football-data.org ────────────────────────────────────────────────────────
+
+def fetch_fd_team_crest(team_id):
+    """Returns crest URL from football-data.org team endpoint."""
+    if not FD_KEY:
+        return None
+    data = fetch_json(
+        f"https://api.football-data.org/v4/teams/{team_id}",
+        {"X-Auth-Token": FD_KEY}
+    )
+    return data.get("crest") if data else None
+
+def fetch_epl_fixtures(team_id, competition):
+    if not FD_KEY:
+        print("  [SKIP] No FOOTBALLDATA_KEY")
+        return []
+    data = fetch_json(
+        f"https://api.football-data.org/v4/teams/{team_id}/matches"
+        f"?competitions={competition}&season={SEASON}&status=SCHEDULED,FINISHED,LIVE",
+        {"X-Auth-Token": FD_KEY}
+    )
+    if not data or "matches" not in data:
+        return []
+    games = []
+    for m in data["matches"]:
+        home   = m["homeTeam"]["shortName"] or m["homeTeam"]["name"]
+        away   = m["awayTeam"]["shortName"] or m["awayTeam"]["name"]
+        is_home = m["homeTeam"]["id"] == team_id
+        hs     = m["score"]["fullTime"]["home"]
+        as_    = m["score"]["fullTime"]["away"]
+        done   = m["status"] == "FINISHED"
+        games.append({
+            "date":     fmt_date(m["utcDate"]),
+            "home":     home,
+            "away":     away,
+            "homeGame": is_home,
+            "score":    f"{hs}-{as_}" if done and hs is not None else None,
+            "result":   result_tag(hs, as_, is_home) if done else None,
+        })
+    return games
+
+def fetch_epl_standings(competition, highlight_id):
+    if not FD_KEY:
+        return []
+    data = fetch_json(
+        f"https://api.football-data.org/v4/competitions/{competition}/standings?season={SEASON}",
+        {"X-Auth-Token": FD_KEY}
+    )
+    if not data:
+        return []
+    try:
+        table = data["standings"][0]["table"]
+    except (KeyError, IndexError):
+        return []
+    CL = {1,2,3,4}; EL = {5,6,7}; REL = {18,19,20}
+    rows = []
+    for r in table:
+        pos = r["position"]
+        rows.append({
+            "pos":       pos,
+            "name":      r["team"]["shortName"] or r["team"]["name"],
+            "crest":     r["team"].get("crest"),
+            "pts":       r["points"],
+            "w": r["won"], "d": r["draw"], "l": r["lost"],
+            "zone":      "cl" if pos in CL else "el" if pos in EL else "rel" if pos in REL else None,
+            "highlight": r["team"]["id"] == highlight_id,
+        })
+    return rows
+
+# ── api-football (dashboard.api-football.com) ────────────────────────────────
+# Same REST API as RapidAPI but authenticated via "x-apisports-key" header
+# and served from v3.football.api-sports.io
+
+def af_headers():
+    return {"x-apisports-key": AF_KEY}
+
+def fetch_af_team_crest(team_id):
+    """Returns crest URL from api-football team endpoint."""
+    if not AF_KEY:
+        return None
+    data = fetch_json(
+        f"https://v3.football.api-sports.io/teams?id={team_id}",
+        af_headers()
+    )
+    try:
+        return data["response"][0]["team"]["logo"]
+    except (TypeError, KeyError, IndexError):
+        return None
+
+def fetch_rpl_fixtures(team_id, league_id):
+    if not AF_KEY:
+        print("  [SKIP] No APIFOOTBALL_KEY")
+        return []
+    data = fetch_json(
+        f"https://v3.football.api-sports.io/fixtures?team={team_id}&league={league_id}&season={SEASON}",
+        af_headers()
+    )
+    if not data or "response" not in data:
+        return []
+    games = []
+    for m in data["response"]:
+        fix     = m["fixture"]
+        home_t  = m["teams"]["home"]
+        away_t  = m["teams"]["away"]
+        goals   = m["goals"]
+        is_home = home_t["id"] == team_id
+        done    = fix["status"]["short"] == "FT"
+        hs      = goals.get("home")
+        as_     = goals.get("away")
+        games.append({
+            "date":     fmt_date(fix["date"]),
+            "home":     home_t["name"],
+            "away":     away_t["name"],
+            "homeGame": is_home,
+            "score":    f"{hs}-{as_}" if done and hs is not None else None,
+            "result":   result_tag(hs, as_, is_home) if done else None,
+        })
+    games.sort(key=lambda g: g["date"])
+    return games
+
+def fetch_rpl_standings(league_id, highlight_id):
+    if not AF_KEY:
+        return []
+    data = fetch_json(
+        f"https://v3.football.api-sports.io/standings?league={league_id}&season={SEASON}",
+        af_headers()
+    )
+    if not data or "response" not in data:
+        return []
+    try:
+        table = data["response"][0]["league"]["standings"][0]
+    except (KeyError, IndexError):
+        return []
+    CL = {1,2}; EL = {3}; REL = {14,15,16}
+    rows = []
+    for r in table:
+        pos = r["rank"]
+        rows.append({
+            "pos":       pos,
+            "name":      r["team"]["name"],
+            "crest":     r["team"].get("logo"),
+            "pts":       r["points"],
+            "w": r["all"]["win"], "d": r["all"]["draw"], "l": r["all"]["lose"],
+            "zone":      "cl" if pos in CL else "el" if pos in EL else "rel" if pos in REL else None,
+            "highlight": r["team"]["id"] == highlight_id,
+        })
+    return rows
+
+# ── static fallback crests (Wikipedia / public domain SVG) ──────────────────
+# Used when API keys are absent or API is down.
+FALLBACK_CRESTS = {
+    "arsenal": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
+    "spartak":  "https://upload.wikimedia.org/wikipedia/en/5/50/FC_Spartak_Moscow.svg",
+    "fakel":    "https://upload.wikimedia.org/wikipedia/en/f/f6/FC_Fakel_Voronezh.svg",
+}
+
+# ── assemble ─────────────────────────────────────────────────────────────────
+
+def build():
+    out = {}
+
+    # ── Arsenal ──
+    print("Fetching Arsenal / EPL …")
+    apl_crest   = fetch_fd_team_crest(CLUBS_META["arsenal"]["fd_team_id"]) \
+                  or fetch_af_team_crest(CLUBS_META["arsenal"]["rf_team_id"]) \
+                  or FALLBACK_CRESTS["arsenal"]
+    apl_games   = fetch_epl_fixtures(CLUBS_META["arsenal"]["fd_team_id"], "PL")
+    apl_st      = fetch_epl_standings("PL", CLUBS_META["arsenal"]["fd_team_id"])
+    out["arsenal"] = {
+        **{k: v for k, v in CLUBS_META["arsenal"].items()
+           if k not in ("fd_team_id","fd_competition","rf_team_id","rf_league_id")},
+        "crest":    apl_crest,
+        "hasData":  bool(apl_games),
+        "games":    {"АПЛ 26/27": apl_games or []},
+        "standings": {
+            "note":  "Таблица актуальна на момент последнего обновления" if apl_st
+                     else "Сезон 26/27 стартует 21 августа — таблица пустая",
+            "teams": apl_st or [],
+        },
+    }
+
+    # ── Spartak ──
+    print("Fetching Spartak / RPL …")
+    sp_crest  = fetch_af_team_crest(CLUBS_META["spartak"]["rf_team_id"]) \
+                or FALLBACK_CRESTS["spartak"]
+    sp_games  = fetch_rpl_fixtures(CLUBS_META["spartak"]["rf_team_id"], CLUBS_META["spartak"]["rf_league_id"])
+    sp_st     = fetch_rpl_standings(CLUBS_META["spartak"]["rf_league_id"], CLUBS_META["spartak"]["rf_team_id"])
+    out["spartak"] = {
+        **{k: v for k, v in CLUBS_META["spartak"].items()
+           if k not in ("rf_team_id","rf_league_id")},
+        "crest":   sp_crest,
+        "hasData": bool(sp_games),
+        "games":   {"РПЛ 26/27": sp_games or [], "Кубок России 26/27": []},
+        "standings": {
+            "note":  "Таблица актуальна на момент последнего обновления" if sp_st
+                     else "Расписание РПЛ 26/27 пока не опубликовано",
+            "teams": sp_st or [],
+        },
+    }
+
+    # ── Fakel ──
+    print("Fetching Fakel / RPL …")
+    fk_crest  = fetch_af_team_crest(CLUBS_META["fakel"]["rf_team_id"]) \
+                or FALLBACK_CRESTS["fakel"]
+    fk_games  = fetch_rpl_fixtures(CLUBS_META["fakel"]["rf_team_id"], CLUBS_META["fakel"]["rf_league_id"])
+    fk_st     = fetch_rpl_standings(CLUBS_META["fakel"]["rf_league_id"], CLUBS_META["fakel"]["rf_team_id"])
+    out["fakel"] = {
+        **{k: v for k, v in CLUBS_META["fakel"].items()
+           if k not in ("rf_team_id","rf_league_id")},
+        "crest":   fk_crest,
+        "hasData": bool(fk_games),
+        "games":   {"РПЛ 26/27": fk_games or [], "Кубок России 26/27": []},
+        "standings": {
+            "note":  "Таблица актуальна на момент последнего обновления" if fk_st
+                     else "Расписание РПЛ 26/27 пока не опубликовано",
+            "teams": fk_st or [],
+        },
+    }
+
+    return {"updated": NOW, "clubs": out}
+
+
+if __name__ == "__main__":
+    payload = build()
+    out_path = os.path.join(os.path.dirname(__file__), "data", "clubs.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    print(f"✓  data/clubs.json  ({NOW})")
