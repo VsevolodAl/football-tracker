@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-28T12:00:19.958370+00:00",
+  "updated": "2026-06-29T17:14:14.333021+00:00",
   "clubs": {
     "arsenal": {
       "name": "Арсенал",
@@ -558,7 +558,7 @@
       ],
       "hasRussian": true,
       "noLeagueNote": null,
-      "crest": "https://media.api-sports.io/football/teams/2673.png",
+      "crest": "https://upload.wikimedia.org/wikipedia/en/5/50/FC_Spartak_Moscow.svg",
       "hasData": false,
       "games": {
         "РПЛ 26/27": [],
@@ -580,7 +580,7 @@
       ],
       "hasRussian": true,
       "noLeagueNote": "По данным Wikipedia, Факел возвращается в РПЛ в сезоне 2026/27.",
-      "crest": "https://media.api-sports.io/football/teams/2695.png",
+      "crest": "https://upload.wikimedia.org/wikipedia/en/f/f6/FC_Fakel_Voronezh.svg",
       "hasData": false,
       "games": {
         "РПЛ 26/27": [],
