@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-08T11:59:30.981567+00:00",
+  "updated": "2026-07-09T16:13:04.156983+00:00",
   "clubs": {
     "arsenal": {
       "name": "Арсенал",
@@ -24,7 +24,7 @@
             "result": null
           },
           {
-            "date": "29 авг",
+            "date": "31 авг",
             "home": "Aston Villa",
             "away": "Arsenal",
             "homeGame": false,
@@ -32,7 +32,7 @@
             "result": null
           },
           {
-            "date": "5 сен",
+            "date": "6 сен",
             "home": "Arsenal",
             "away": "Chelsea",
             "homeGame": true,
