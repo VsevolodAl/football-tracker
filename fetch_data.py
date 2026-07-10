@@ -3,17 +3,22 @@
 Fetches Arsenal (EPL), Spartak, and Fakel data → data/clubs.json
 APIs used:
   - football-data.org       (free, EPL) → env FOOTBALLDATA_KEY
-  - dashboard.api-football.com (free, RPL) → env APIFOOTBALL_KEY
+  - dashboard.api-football.com (free, RPL, but free plan has no access to current
+    seasons — kept as a first try in case the plan is ever upgraded) → env APIFOOTBALL_KEY
+  - TheSportsDB (free, RPL) → public test key "123", no signup needed;
+    this is what actually carries the live РПЛ 26/27 / Кубок России 26/27 data today.
 Club crests come straight from the API responses — no manual URLs needed.
 """
 
-import os, json, urllib.request, urllib.error
+import os, json, time, urllib.request, urllib.error
 from datetime import datetime, timezone
 
-FD_KEY  = os.environ.get("FOOTBALLDATA_KEY", "")
-AF_KEY  = os.environ.get("APIFOOTBALL_KEY", "")   # from dashboard.api-football.com
-NOW     = datetime.now(timezone.utc).isoformat()
-SEASON  = 2026
+FD_KEY   = os.environ.get("FOOTBALLDATA_KEY", "")
+AF_KEY   = os.environ.get("APIFOOTBALL_KEY", "")   # from dashboard.api-football.com
+TSDB_KEY = os.environ.get("THESPORTSDB_KEY", "123")  # "123" = TheSportsDB's public test key
+NOW      = datetime.now(timezone.utc).isoformat()
+SEASON   = 2026
+TSDB_SEASON = "2026-2027"
 
 CLUBS_META = {
     "arsenal": {
@@ -36,6 +41,7 @@ CLUBS_META = {
         "swatchColor": "#C8102E",
         "rf_team_id": 2673,
         "rf_league_id": 235,
+        "tsdb_team_name": "Spartak Moscow",
         "tournaments": ["Товарищеские матчи", "Суперкубок России", "РПЛ 26/27", "Кубок России 26/27"],
         "hasRussian": True,
         "noLeagueNote": None,
@@ -47,6 +53,7 @@ CLUBS_META = {
         "swatchColor": "#005B99",
         "rf_team_id": 2695,
         "rf_league_id": 235,
+        "tsdb_team_name": "Fakel Voronezh",
         "tournaments": ["РПЛ 26/27", "Кубок России 26/27"],
         "hasRussian": True,
         "noLeagueNote": "По данным Wikipedia, Факел возвращается в РПЛ в сезоне 2026/27.",
@@ -178,11 +185,7 @@ def fetch_rpl_fixtures(team_id, league_id):
         af_headers()
     )
     if not data or "response" not in data:
-        print(f"  [DEBUG] no 'response' key. keys={list(data.keys()) if data else None}")
         return []
-    if data.get("errors"):
-        print(f"  [DEBUG] API errors: {data['errors']}")
-    print(f"  [DEBUG] team={team_id} league={league_id} season={SEASON} results={data.get('results')}")
     games = []
     for m in data["response"]:
         fix     = m["fixture"]
@@ -231,6 +234,72 @@ def fetch_rpl_standings(league_id, highlight_id):
             "highlight": r["team"]["id"] == highlight_id,
         })
     return rows
+
+# ── TheSportsDB (free, no signup — public test key "123") ───────────────────
+# api-football's free plan doesn't cover current seasons at all, so this is
+# the actual live source for РПЛ 26/27 / Кубок России 26/27 right now.
+
+TSDB_RPL_LEAGUE_ID = 4355   # Russian Football Premier League
+TSDB_CUP_LEAGUE_ID = 5193   # Russia Cup
+TSDB_RPL_ROUNDS = 30
+TSDB_CUP_ROUNDS = 6
+
+RU_TEAM_NAMES = {
+    "Spartak Moscow": "Спартак",
+    "Zenit Saint Petersburg": "Зенит",
+    "CSKA Moscow": "ЦСКА",
+    "Dynamo Moscow": "Динамо",
+    "Dynamo Makhachkala": "Динамо Мх",
+    "Rostov": "Ростов",
+    "Lokomotiv Moscow": "Локомотив",
+    "Akron Tolyatti": "Акрон",
+    "Krylia Sovetov Samara": "Крылья Советов",
+    "Rubin Kazan": "Рубин",
+    "Akhmat Grozny": "Ахмат",
+    "Krasnodar": "Краснодар",
+    "Baltika Kaliningrad": "Балтика",
+    "Orenburg": "Оренбург",
+    "Rodina Moscow": "Родина",
+    "Fakel Voronezh": "Факел",
+}
+
+def tsdb_ru(name):
+    return RU_TEAM_NAMES.get(name, name)
+
+def fetch_tsdb_league_events(league_id, rounds):
+    """Pulls every round of a TheSportsDB league/season, one request per round
+    (there's no reliable single-shot 'whole season' endpoint). Throttled to stay
+    under the free key's 30 req/min limit."""
+    events = []
+    for r in range(1, rounds + 1):
+        data = fetch_json(
+            f"https://www.thesportsdb.com/api/v1/json/{TSDB_KEY}/eventsround.php"
+            f"?id={league_id}&r={r}&s={TSDB_SEASON}"
+        )
+        if data and data.get("events"):
+            events.extend(data["events"])
+        time.sleep(2.5)
+    return events
+
+def tsdb_event_to_game(ev, team_en):
+    is_home = ev["strHomeTeam"] == team_en
+    hs, as_ = ev.get("intHomeScore"), ev.get("intAwayScore")
+    done = ev.get("strStatus") == "FT" and hs is not None and as_ is not None
+    return {
+        "date":     fmt_date(ev["dateEvent"]),
+        "home":     tsdb_ru(ev["strHomeTeam"]),
+        "away":     tsdb_ru(ev["strAwayTeam"]),
+        "homeGame": is_home,
+        "score":    f"{hs}-{as_}" if done else None,
+        "result":   result_tag(int(hs), int(as_), is_home) if done else None,
+        "_sortkey": ev["dateEvent"],
+    }
+
+def tsdb_team_games(events, team_en):
+    games = [tsdb_event_to_game(e, team_en) for e in events
+             if team_en in (e.get("strHomeTeam"), e.get("strAwayTeam"))]
+    games.sort(key=lambda g: g.pop("_sortkey"))
+    return games
 
 # ── static fallback crests (Wikipedia / public domain SVG) ──────────────────
 # Used when API keys are absent or API is down.
@@ -340,31 +409,10 @@ STATIC_FIXTURES = {
     },
 }
 
-# ── one-off diagnostic: is RFPL reachable on football-data.org with our key? ──
-
-def debug_check_rfpl():
-    if not FD_KEY:
-        print("  [DEBUG-RFPL] no FOOTBALLDATA_KEY, skipping")
-        return
-    data = fetch_json(
-        "https://api.football-data.org/v4/competitions/RFPL/teams",
-        {"X-Auth-Token": FD_KEY}
-    )
-    if not data:
-        print("  [DEBUG-RFPL] request failed, see [WARN] above")
-        return
-    teams = data.get("teams", [])
-    print(f"  [DEBUG-RFPL] accessible! {len(teams)} teams")
-    for t in teams:
-        print(f"    id={t['id']} name={t['name']} shortName={t.get('shortName')}")
-
 # ── assemble ─────────────────────────────────────────────────────────────────
 
 def build():
     out = {}
-
-    print("Checking football-data.org RFPL access …")
-    debug_check_rfpl()
 
     # ── Arsenal ──
     print("Fetching Arsenal / EPL …")
@@ -386,23 +434,32 @@ def build():
         },
     }
 
+    # ── RPL / Cup events from TheSportsDB, fetched once and reused for both clubs ──
+    print("Fetching РПЛ 26/27 + Кубок России 26/27 from TheSportsDB …")
+    tsdb_rpl_events = fetch_tsdb_league_events(TSDB_RPL_LEAGUE_ID, TSDB_RPL_ROUNDS)
+    tsdb_cup_events = fetch_tsdb_league_events(TSDB_CUP_LEAGUE_ID, TSDB_CUP_ROUNDS)
+
     # ── Spartak ──
     print("Fetching Spartak / RPL …")
     sp_crest  = fetch_af_team_crest(CLUBS_META["spartak"]["rf_team_id"]) \
                 or FALLBACK_CRESTS["spartak"]
+    sp_tsdb_name = CLUBS_META["spartak"]["tsdb_team_name"]
     sp_games  = fetch_rpl_fixtures(CLUBS_META["spartak"]["rf_team_id"], CLUBS_META["spartak"]["rf_league_id"]) \
+                or tsdb_team_games(tsdb_rpl_events, sp_tsdb_name) \
                 or STATIC_FIXTURES["spartak"]["РПЛ 26/27"]
+    sp_cup_games = tsdb_team_games(tsdb_cup_events, sp_tsdb_name) \
+                or STATIC_FIXTURES["spartak"]["Кубок России 26/27"]
     sp_st     = fetch_rpl_standings(CLUBS_META["spartak"]["rf_league_id"], CLUBS_META["spartak"]["rf_team_id"])
     out["spartak"] = {
         **{k: v for k, v in CLUBS_META["spartak"].items()
-           if k not in ("rf_team_id","rf_league_id")},
+           if k not in ("rf_team_id","rf_league_id","tsdb_team_name")},
         "crest":   sp_crest,
         "hasData": bool(sp_games),
         "games":   {
             "Товарищеские матчи": STATIC_FIXTURES["spartak"]["Товарищеские матчи"],
             "Суперкубок России":  STATIC_FIXTURES["spartak"]["Суперкубок России"],
             "РПЛ 26/27":          sp_games or [],
-            "Кубок России 26/27": STATIC_FIXTURES["spartak"]["Кубок России 26/27"],
+            "Кубок России 26/27": sp_cup_games or [],
         },
         "standings": {
             "note":  "Таблица актуальна на момент последнего обновления" if sp_st
@@ -415,17 +472,21 @@ def build():
     print("Fetching Fakel / RPL …")
     fk_crest  = fetch_af_team_crest(CLUBS_META["fakel"]["rf_team_id"]) \
                 or FALLBACK_CRESTS["fakel"]
+    fk_tsdb_name = CLUBS_META["fakel"]["tsdb_team_name"]
     fk_games  = fetch_rpl_fixtures(CLUBS_META["fakel"]["rf_team_id"], CLUBS_META["fakel"]["rf_league_id"]) \
+                or tsdb_team_games(tsdb_rpl_events, fk_tsdb_name) \
                 or STATIC_FIXTURES["fakel"]["РПЛ 26/27"]
+    fk_cup_games = tsdb_team_games(tsdb_cup_events, fk_tsdb_name) \
+                or STATIC_FIXTURES["fakel"]["Кубок России 26/27"]
     fk_st     = fetch_rpl_standings(CLUBS_META["fakel"]["rf_league_id"], CLUBS_META["fakel"]["rf_team_id"])
     out["fakel"] = {
         **{k: v for k, v in CLUBS_META["fakel"].items()
-           if k not in ("rf_team_id","rf_league_id")},
+           if k not in ("rf_team_id","rf_league_id","tsdb_team_name")},
         "crest":   fk_crest,
         "hasData": bool(fk_games),
         "games":   {
             "РПЛ 26/27":          fk_games or [],
-            "Кубок России 26/27": STATIC_FIXTURES["fakel"]["Кубок России 26/27"],
+            "Кубок России 26/27": fk_cup_games or [],
         },
         "standings": {
             "note":  "Таблица актуальна на момент последнего обновления" if fk_st

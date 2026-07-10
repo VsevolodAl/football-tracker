@@ -593,7 +593,7 @@
             "result": null
           },
           {
-            "date": "2 авг",
+            "date": "1 авг",
             "home": "Ахмат",
             "away": "Спартак",
             "homeGame": false,
@@ -601,7 +601,7 @@
             "result": null
           },
           {
-            "date": "9 авг",
+            "date": "8 авг",
             "home": "Спартак",
             "away": "Краснодар",
             "homeGame": true,
@@ -609,7 +609,7 @@
             "result": null
           },
           {
-            "date": "16 авг",
+            "date": "15 авг",
             "home": "Балтика",
             "away": "Спартак",
             "homeGame": false,
@@ -617,7 +617,7 @@
             "result": null
           },
           {
-            "date": "23 авг",
+            "date": "22 авг",
             "home": "Спартак",
             "away": "Зенит",
             "homeGame": true,
@@ -633,7 +633,7 @@
             "result": null
           },
           {
-            "date": "6 сен",
+            "date": "5 сен",
             "home": "Динамо",
             "away": "Спартак",
             "homeGame": false,
@@ -641,7 +641,7 @@
             "result": null
           },
           {
-            "date": "13 сен",
+            "date": "12 сен",
             "home": "Спартак",
             "away": "Ростов",
             "homeGame": true,
@@ -657,7 +657,7 @@
             "result": null
           },
           {
-            "date": "11 окт",
+            "date": "10 окт",
             "home": "Крылья Советов",
             "away": "Спартак",
             "homeGame": false,
@@ -665,7 +665,7 @@
             "result": null
           },
           {
-            "date": "18 окт",
+            "date": "17 окт",
             "home": "Спартак",
             "away": "Рубин",
             "homeGame": true,
@@ -673,7 +673,7 @@
             "result": null
           },
           {
-            "date": "25 окт",
+            "date": "24 окт",
             "home": "ЦСКА",
             "away": "Спартак",
             "homeGame": false,
@@ -681,7 +681,7 @@
             "result": null
           },
           {
-            "date": "1 ноя",
+            "date": "31 окт",
             "home": "Локомотив",
             "away": "Спартак",
             "homeGame": false,
@@ -689,7 +689,7 @@
             "result": null
           },
           {
-            "date": "8 ноя",
+            "date": "7 ноя",
             "home": "Спартак",
             "away": "Акрон",
             "homeGame": true,
@@ -697,7 +697,7 @@
             "result": null
           },
           {
-            "date": "22 ноя",
+            "date": "21 ноя",
             "home": "Динамо Мх",
             "away": "Спартак",
             "homeGame": false,
@@ -705,7 +705,7 @@
             "result": null
           },
           {
-            "date": "29 ноя",
+            "date": "28 ноя",
             "home": "Факел",
             "away": "Спартак",
             "homeGame": false,
@@ -713,7 +713,7 @@
             "result": null
           },
           {
-            "date": "6 дек",
+            "date": "5 дек",
             "home": "Спартак",
             "away": "Динамо",
             "homeGame": true,
@@ -721,7 +721,7 @@
             "result": null
           },
           {
-            "date": "28 фев",
+            "date": "27 фев",
             "home": "Краснодар",
             "away": "Спартак",
             "homeGame": false,
@@ -729,7 +729,7 @@
             "result": null
           },
           {
-            "date": "7 мар",
+            "date": "6 мар",
             "home": "Акрон",
             "away": "Спартак",
             "homeGame": false,
@@ -737,7 +737,7 @@
             "result": null
           },
           {
-            "date": "14 мар",
+            "date": "13 мар",
             "home": "Спартак",
             "away": "Ахмат",
             "homeGame": true,
@@ -745,7 +745,7 @@
             "result": null
           },
           {
-            "date": "21 мар",
+            "date": "20 мар",
             "home": "Рубин",
             "away": "Спартак",
             "homeGame": false,
@@ -753,7 +753,7 @@
             "result": null
           },
           {
-            "date": "4 апр",
+            "date": "3 апр",
             "home": "Спартак",
             "away": "Динамо Мх",
             "homeGame": true,
@@ -761,7 +761,7 @@
             "result": null
           },
           {
-            "date": "11 апр",
+            "date": "10 апр",
             "home": "Оренбург",
             "away": "Спартак",
             "homeGame": false,
@@ -769,7 +769,7 @@
             "result": null
           },
           {
-            "date": "18 апр",
+            "date": "17 апр",
             "home": "Спартак",
             "away": "ЦСКА",
             "homeGame": true,
@@ -777,7 +777,7 @@
             "result": null
           },
           {
-            "date": "25 апр",
+            "date": "24 апр",
             "home": "Родина",
             "away": "Спартак",
             "homeGame": false,
@@ -785,7 +785,7 @@
             "result": null
           },
           {
-            "date": "2 май",
+            "date": "1 май",
             "home": "Спартак",
             "away": "Балтика",
             "homeGame": true,
@@ -793,7 +793,7 @@
             "result": null
           },
           {
-            "date": "9 май",
+            "date": "8 май",
             "home": "Спартак",
             "away": "Локомотив",
             "homeGame": true,
@@ -801,7 +801,7 @@
             "result": null
           },
           {
-            "date": "16 май",
+            "date": "15 май",
             "home": "Зенит",
             "away": "Спартак",
             "homeGame": false,
@@ -809,7 +809,7 @@
             "result": null
           },
           {
-            "date": "23 май",
+            "date": "22 май",
             "home": "Спартак",
             "away": "Крылья Советов",
             "homeGame": true,
@@ -905,7 +905,7 @@
             "result": null
           },
           {
-            "date": "2 авг",
+            "date": "1 авг",
             "home": "Краснодар",
             "away": "Факел",
             "homeGame": false,
@@ -913,7 +913,7 @@
             "result": null
           },
           {
-            "date": "10 авг",
+            "date": "8 авг",
             "home": "Факел",
             "away": "Ахмат",
             "homeGame": true,
@@ -969,7 +969,7 @@
             "result": null
           },
           {
-            "date": "11 окт",
+            "date": "10 окт",
             "home": "Факел",
             "away": "Локомотив",
             "homeGame": true,
@@ -977,7 +977,7 @@
             "result": null
           },
           {
-            "date": "18 окт",
+            "date": "17 окт",
             "home": "Крылья Советов",
             "away": "Факел",
             "homeGame": false,
@@ -985,7 +985,7 @@
             "result": null
           },
           {
-            "date": "25 окт",
+            "date": "24 окт",
             "home": "Факел",
             "away": "Родина",
             "homeGame": true,
@@ -993,7 +993,7 @@
             "result": null
           },
           {
-            "date": "1 ноя",
+            "date": "31 окт",
             "home": "Рубин",
             "away": "Факел",
             "homeGame": false,
@@ -1001,7 +1001,7 @@
             "result": null
           },
           {
-            "date": "8 ноя",
+            "date": "7 ноя",
             "home": "Факел",
             "away": "Динамо",
             "homeGame": true,
@@ -1009,7 +1009,7 @@
             "result": null
           },
           {
-            "date": "22 ноя",
+            "date": "21 ноя",
             "home": "Акрон",
             "away": "Факел",
             "homeGame": false,
@@ -1017,7 +1017,7 @@
             "result": null
           },
           {
-            "date": "29 ноя",
+            "date": "28 ноя",
             "home": "Факел",
             "away": "Спартак",
             "homeGame": true,
@@ -1025,7 +1025,7 @@
             "result": null
           },
           {
-            "date": "6 дек",
+            "date": "5 дек",
             "home": "Факел",
             "away": "Ростов",
             "homeGame": true,
@@ -1033,7 +1033,7 @@
             "result": null
           },
           {
-            "date": "28 фев",
+            "date": "27 фев",
             "home": "Зенит",
             "away": "Факел",
             "homeGame": false,
@@ -1041,7 +1041,7 @@
             "result": null
           },
           {
-            "date": "7 мар",
+            "date": "6 мар",
             "home": "Динамо Мх",
             "away": "Факел",
             "homeGame": false,
@@ -1049,7 +1049,7 @@
             "result": null
           },
           {
-            "date": "14 мар",
+            "date": "13 мар",
             "home": "Факел",
             "away": "ЦСКА",
             "homeGame": true,
@@ -1057,7 +1057,7 @@
             "result": null
           },
           {
-            "date": "21 мар",
+            "date": "20 мар",
             "home": "Локомотив",
             "away": "Факел",
             "homeGame": false,
@@ -1065,7 +1065,7 @@
             "result": null
           },
           {
-            "date": "4 апр",
+            "date": "3 апр",
             "home": "Ахмат",
             "away": "Факел",
             "homeGame": false,
@@ -1073,7 +1073,7 @@
             "result": null
           },
           {
-            "date": "11 апр",
+            "date": "10 апр",
             "home": "Факел",
             "away": "Акрон",
             "homeGame": true,
@@ -1081,7 +1081,7 @@
             "result": null
           },
           {
-            "date": "18 апр",
+            "date": "17 апр",
             "home": "Динамо",
             "away": "Факел",
             "homeGame": false,
@@ -1089,7 +1089,7 @@
             "result": null
           },
           {
-            "date": "25 апр",
+            "date": "24 апр",
             "home": "Оренбург",
             "away": "Факел",
             "homeGame": false,
@@ -1097,7 +1097,7 @@
             "result": null
           },
           {
-            "date": "2 май",
+            "date": "1 май",
             "home": "Факел",
             "away": "Рубин",
             "homeGame": true,
@@ -1105,7 +1105,7 @@
             "result": null
           },
           {
-            "date": "9 май",
+            "date": "8 май",
             "home": "Балтика",
             "away": "Факел",
             "homeGame": false,
@@ -1113,7 +1113,7 @@
             "result": null
           },
           {
-            "date": "16 май",
+            "date": "15 май",
             "home": "Факел",
             "away": "Крылья Советов",
             "homeGame": true,
@@ -1121,7 +1121,7 @@
             "result": null
           },
           {
-            "date": "23 май",
+            "date": "22 май",
             "home": "Факел",
             "away": "Краснодар",
             "homeGame": true,
