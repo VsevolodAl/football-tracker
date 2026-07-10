@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-10T13:27:28.266470+00:00",
+  "updated": "2026-07-10T20:01:37.694390+00:00",
   "clubs": {
     "arsenal": {
       "name": "Арсенал",
@@ -553,19 +553,331 @@
       "bodyClass": "club-spartak",
       "swatchColor": "#C8102E",
       "tournaments": [
+        "Товарищеские матчи",
+        "Суперкубок России",
         "РПЛ 26/27",
         "Кубок России 26/27"
       ],
       "hasRussian": true,
       "noLeagueNote": null,
       "crest": "https://upload.wikimedia.org/wikipedia/en/5/50/FC_Spartak_Moscow.svg",
-      "hasData": false,
+      "hasData": true,
       "games": {
-        "РПЛ 26/27": [],
-        "Кубок России 26/27": []
+        "Товарищеские матчи": [
+          {
+            "date": "11 июл",
+            "home": "Локомотив",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          }
+        ],
+        "Суперкубок России": [
+          {
+            "date": "18 июл",
+            "home": "Зенит",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          }
+        ],
+        "РПЛ 26/27": [
+          {
+            "date": "25 июл",
+            "home": "Спартак",
+            "away": "Родина",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "2 авг",
+            "home": "Ахмат",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "9 авг",
+            "home": "Спартак",
+            "away": "Краснодар",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "16 авг",
+            "home": "Балтика",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "23 авг",
+            "home": "Спартак",
+            "away": "Зенит",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "29 авг",
+            "home": "Спартак",
+            "away": "Оренбург",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "6 сен",
+            "home": "Динамо",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "13 сен",
+            "home": "Спартак",
+            "away": "Ростов",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "16 сен",
+            "home": "Спартак",
+            "away": "Факел",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "11 окт",
+            "home": "Крылья Советов",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "18 окт",
+            "home": "Спартак",
+            "away": "Рубин",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "25 окт",
+            "home": "ЦСКА",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "1 ноя",
+            "home": "Локомотив",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "8 ноя",
+            "home": "Спартак",
+            "away": "Акрон",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "22 ноя",
+            "home": "Динамо Мх",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "29 ноя",
+            "home": "Факел",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "6 дек",
+            "home": "Спартак",
+            "away": "Динамо",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "28 фев",
+            "home": "Краснодар",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "7 мар",
+            "home": "Акрон",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "14 мар",
+            "home": "Спартак",
+            "away": "Ахмат",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "21 мар",
+            "home": "Рубин",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "4 апр",
+            "home": "Спартак",
+            "away": "Динамо Мх",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "11 апр",
+            "home": "Оренбург",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "18 апр",
+            "home": "Спартак",
+            "away": "ЦСКА",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "25 апр",
+            "home": "Родина",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "2 май",
+            "home": "Спартак",
+            "away": "Балтика",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "9 май",
+            "home": "Спартак",
+            "away": "Локомотив",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "16 май",
+            "home": "Зенит",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "23 май",
+            "home": "Спартак",
+            "away": "Крылья Советов",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "29 май",
+            "home": "Ростов",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          }
+        ],
+        "Кубок России 26/27": [
+          {
+            "date": "4 авг",
+            "home": "Спартак",
+            "away": "Оренбург",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "18 авг",
+            "home": "Рубин",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "1 сен",
+            "home": "Спартак",
+            "away": "Родина",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "13 окт",
+            "home": "Родина",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "27 окт",
+            "home": "Спартак",
+            "away": "Рубин",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "24 ноя",
+            "home": "Оренбург",
+            "away": "Спартак",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          }
+        ]
       },
       "standings": {
-        "note": "Расписание РПЛ 26/27 пока не опубликовано",
+        "note": "Сезон 2026/27 стартует 25 июля — таблица пустая",
         "teams": []
       }
     },

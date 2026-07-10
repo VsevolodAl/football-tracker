@@ -36,7 +36,7 @@ CLUBS_META = {
         "swatchColor": "#C8102E",
         "rf_team_id": 2673,
         "rf_league_id": 235,
-        "tournaments": ["РПЛ 26/27", "Кубок России 26/27"],
+        "tournaments": ["Товарищеские матчи", "Суперкубок России", "РПЛ 26/27", "Кубок России 26/27"],
         "hasRussian": True,
         "noLeagueNote": None,
     },
@@ -236,6 +236,64 @@ FALLBACK_CRESTS = {
     "fakel":    "https://upload.wikimedia.org/wikipedia/en/f/f6/FC_Fakel_Voronezh.svg",
 }
 
+# ── static fallback fixtures ─────────────────────────────────────────────────
+# api-football's free tier doesn't carry RPL 26/27 fixtures yet, so these are
+# hand-entered from official RPL/RFS schedule announcements (July 2026) and
+# used whenever the live API returns nothing.
+def _g(date, home, away, home_game):
+    return {"date": date, "home": home, "away": away, "homeGame": home_game, "score": None, "result": None}
+
+STATIC_FIXTURES = {
+    "spartak": {
+        "Товарищеские матчи": [
+            _g("11 июл", "Локомотив", "Спартак", False),
+        ],
+        "Суперкубок России": [
+            _g("18 июл", "Зенит", "Спартак", False),
+        ],
+        "РПЛ 26/27": [
+            _g("25 июл", "Спартак", "Родина", True),
+            _g("2 авг", "Ахмат", "Спартак", False),
+            _g("9 авг", "Спартак", "Краснодар", True),
+            _g("16 авг", "Балтика", "Спартак", False),
+            _g("23 авг", "Спартак", "Зенит", True),
+            _g("29 авг", "Спартак", "Оренбург", True),
+            _g("6 сен", "Динамо", "Спартак", False),
+            _g("13 сен", "Спартак", "Ростов", True),
+            _g("16 сен", "Спартак", "Факел", True),
+            _g("11 окт", "Крылья Советов", "Спартак", False),
+            _g("18 окт", "Спартак", "Рубин", True),
+            _g("25 окт", "ЦСКА", "Спартак", False),
+            _g("1 ноя", "Локомотив", "Спартак", False),
+            _g("8 ноя", "Спартак", "Акрон", True),
+            _g("22 ноя", "Динамо Мх", "Спартак", False),
+            _g("29 ноя", "Факел", "Спартак", False),
+            _g("6 дек", "Спартак", "Динамо", True),
+            _g("28 фев", "Краснодар", "Спартак", False),
+            _g("7 мар", "Акрон", "Спартак", False),
+            _g("14 мар", "Спартак", "Ахмат", True),
+            _g("21 мар", "Рубин", "Спартак", False),
+            _g("4 апр", "Спартак", "Динамо Мх", True),
+            _g("11 апр", "Оренбург", "Спартак", False),
+            _g("18 апр", "Спартак", "ЦСКА", True),
+            _g("25 апр", "Родина", "Спартак", False),
+            _g("2 май", "Спартак", "Балтика", True),
+            _g("9 май", "Спартак", "Локомотив", True),
+            _g("16 май", "Зенит", "Спартак", False),
+            _g("23 май", "Спартак", "Крылья Советов", True),
+            _g("29 май", "Ростов", "Спартак", False),
+        ],
+        "Кубок России 26/27": [
+            _g("4 авг", "Спартак", "Оренбург", True),
+            _g("18 авг", "Рубин", "Спартак", False),
+            _g("1 сен", "Спартак", "Родина", True),
+            _g("13 окт", "Родина", "Спартак", False),
+            _g("27 окт", "Спартак", "Рубин", True),
+            _g("24 ноя", "Оренбург", "Спартак", False),
+        ],
+    },
+}
+
 # ── assemble ─────────────────────────────────────────────────────────────────
 
 def build():
@@ -265,17 +323,23 @@ def build():
     print("Fetching Spartak / RPL …")
     sp_crest  = fetch_af_team_crest(CLUBS_META["spartak"]["rf_team_id"]) \
                 or FALLBACK_CRESTS["spartak"]
-    sp_games  = fetch_rpl_fixtures(CLUBS_META["spartak"]["rf_team_id"], CLUBS_META["spartak"]["rf_league_id"])
+    sp_games  = fetch_rpl_fixtures(CLUBS_META["spartak"]["rf_team_id"], CLUBS_META["spartak"]["rf_league_id"]) \
+                or STATIC_FIXTURES["spartak"]["РПЛ 26/27"]
     sp_st     = fetch_rpl_standings(CLUBS_META["spartak"]["rf_league_id"], CLUBS_META["spartak"]["rf_team_id"])
     out["spartak"] = {
         **{k: v for k, v in CLUBS_META["spartak"].items()
            if k not in ("rf_team_id","rf_league_id")},
         "crest":   sp_crest,
         "hasData": bool(sp_games),
-        "games":   {"РПЛ 26/27": sp_games or [], "Кубок России 26/27": []},
+        "games":   {
+            "Товарищеские матчи": STATIC_FIXTURES["spartak"]["Товарищеские матчи"],
+            "Суперкубок России":  STATIC_FIXTURES["spartak"]["Суперкубок России"],
+            "РПЛ 26/27":          sp_games or [],
+            "Кубок России 26/27": STATIC_FIXTURES["spartak"]["Кубок России 26/27"],
+        },
         "standings": {
             "note":  "Таблица актуальна на момент последнего обновления" if sp_st
-                     else "Расписание РПЛ 26/27 пока не опубликовано",
+                     else "Сезон 2026/27 стартует 25 июля — таблица пустая",
             "teams": sp_st or [],
         },
     }
