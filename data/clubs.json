@@ -893,13 +893,303 @@
       "hasRussian": true,
       "noLeagueNote": "По данным Wikipedia, Факел возвращается в РПЛ в сезоне 2026/27.",
       "crest": "https://upload.wikimedia.org/wikipedia/en/f/f6/FC_Fakel_Voronezh.svg",
-      "hasData": false,
+      "hasData": true,
       "games": {
-        "РПЛ 26/27": [],
-        "Кубок России 26/27": []
+        "РПЛ 26/27": [
+          {
+            "date": "25 июл",
+            "home": "Факел",
+            "away": "Динамо Мх",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "2 авг",
+            "home": "Краснодар",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "10 авг",
+            "home": "Факел",
+            "away": "Ахмат",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "15 авг",
+            "home": "ЦСКА",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "22 авг",
+            "home": "Факел",
+            "away": "Оренбург",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "29 авг",
+            "home": "Факел",
+            "away": "Зенит",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "5 сен",
+            "home": "Ростов",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "12 сен",
+            "home": "Факел",
+            "away": "Балтика",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "16 сен",
+            "home": "Спартак",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "11 окт",
+            "home": "Факел",
+            "away": "Локомотив",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "18 окт",
+            "home": "Крылья Советов",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "25 окт",
+            "home": "Факел",
+            "away": "Родина",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "1 ноя",
+            "home": "Рубин",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "8 ноя",
+            "home": "Факел",
+            "away": "Динамо",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "22 ноя",
+            "home": "Акрон",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "29 ноя",
+            "home": "Факел",
+            "away": "Спартак",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "6 дек",
+            "home": "Факел",
+            "away": "Ростов",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "28 фев",
+            "home": "Зенит",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "7 мар",
+            "home": "Динамо Мх",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "14 мар",
+            "home": "Факел",
+            "away": "ЦСКА",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "21 мар",
+            "home": "Локомотив",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "4 апр",
+            "home": "Ахмат",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "11 апр",
+            "home": "Факел",
+            "away": "Акрон",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "18 апр",
+            "home": "Динамо",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "25 апр",
+            "home": "Оренбург",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "2 май",
+            "home": "Факел",
+            "away": "Рубин",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "9 май",
+            "home": "Балтика",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "16 май",
+            "home": "Факел",
+            "away": "Крылья Советов",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "23 май",
+            "home": "Факел",
+            "away": "Краснодар",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "29 май",
+            "home": "Родина",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          }
+        ],
+        "Кубок России 26/27": [
+          {
+            "date": "4 авг",
+            "home": "Факел",
+            "away": "Динамо",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "18 авг",
+            "home": "Ахмат",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "1 сен",
+            "home": "Факел",
+            "away": "Краснодар",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "13 окт",
+            "home": "Краснодар",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "27 окт",
+            "home": "Факел",
+            "away": "Ахмат",
+            "homeGame": true,
+            "score": null,
+            "result": null
+          },
+          {
+            "date": "24 ноя",
+            "home": "Динамо",
+            "away": "Факел",
+            "homeGame": false,
+            "score": null,
+            "result": null
+          }
+        ]
       },
       "standings": {
-        "note": "Расписание РПЛ 26/27 пока не опубликовано",
+        "note": "Сезон 2026/27 стартует 25 июля — таблица пустая",
         "teams": []
       }
     }
