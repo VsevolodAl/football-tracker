@@ -11,7 +11,9 @@ Club crests come straight from the API responses — no manual URLs needed.
 """
 
 import os, json, time, urllib.request, urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+
+MSK = timezone(timedelta(hours=3))
 
 FD_KEY   = os.environ.get("FOOTBALLDATA_KEY", "")
 AF_KEY   = os.environ.get("APIFOOTBALL_KEY", "")   # from dashboard.api-football.com
@@ -71,14 +73,26 @@ def fetch_json(url, headers=None):
         print(f"  [WARN] {url} → {e}")
         return None
 
+def to_msk(iso):
+    dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(MSK)
+
 def fmt_date(iso):
     MONTHS = ["янв","фев","мар","апр","май","июн",
               "июл","авг","сен","окт","ноя","дек"]
     try:
-        dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+        dt = to_msk(iso)
         return f"{dt.day} {MONTHS[dt.month-1]}"
     except Exception:
         return iso[:10]
+
+def fmt_time(iso):
+    try:
+        return to_msk(iso).strftime("%H:%M")
+    except Exception:
+        return None
 
 def result_tag(hs, as_, is_home):
     if hs is None or as_ is None:
@@ -120,6 +134,7 @@ def fetch_epl_fixtures(team_id, competition):
         done   = m["status"] == "FINISHED"
         games.append({
             "date":     fmt_date(m["utcDate"]),
+            "time":     fmt_time(m["utcDate"]),
             "home":     home,
             "away":     away,
             "homeGame": is_home,
@@ -198,6 +213,7 @@ def fetch_rpl_fixtures(team_id, league_id):
         as_     = goals.get("away")
         games.append({
             "date":     fmt_date(fix["date"]),
+            "time":     fmt_time(fix["date"]),
             "home":     home_t["name"],
             "away":     away_t["name"],
             "homeGame": is_home,
