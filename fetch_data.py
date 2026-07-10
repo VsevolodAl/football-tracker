@@ -292,6 +292,7 @@ def tsdb_event_to_game(ev, team_en):
         "homeGame": is_home,
         "score":    f"{hs}-{as_}" if done else None,
         "result":   result_tag(int(hs), int(as_), is_home) if done else None,
+        "time":     None,
         "_sortkey": ev["dateEvent"],
     }
 
@@ -313,16 +314,41 @@ FALLBACK_CRESTS = {
 # api-football's free tier doesn't carry RPL 26/27 fixtures yet, so these are
 # hand-entered from official RPL/RFS schedule announcements (July 2026) and
 # used whenever the live API returns nothing.
-def _g(date, home, away, home_game):
-    return {"date": date, "home": home, "away": away, "homeGame": home_game, "score": None, "result": None}
+def _g(date, home, away, home_game, time=None):
+    return {"date": date, "home": home, "away": away, "homeGame": home_game, "score": None, "result": None, "time": time}
+
+# Real (date, time) for the confirmed early rounds, from the RPL's official
+# round 1-9 schedule announcement — overrides both fields because TheSportsDB's
+# day-within-round can be off by one, and its "strTime" is a placeholder
+# (always 15:00), not the actual broadcast time.
+# Keyed by round number (1-indexed) — matches the chronological position in the
+# fixture list, since every team plays exactly one match per round with no gaps.
+TIME_OVERRIDES = {
+    "spartak": {1: ("25 июл", "20:45"), 2: ("2 авг", "20:30"), 3: ("9 авг", "20:30"),
+                4: ("16 авг", "19:30"), 5: ("23 авг", "20:00"), 6: ("29 авг", "20:00"),
+                7: ("6 сен", "18:30"), 8: ("13 сен", "17:00"), 9: ("16 сен", "18:30")},
+    "fakel":   {1: ("25 июл", "18:30"), 2: ("2 авг", "18:15"), 3: ("10 авг", "19:30"),
+                4: ("15 авг", "16:15"), 5: ("22 авг", "15:30"), 6: ("29 авг", "15:00"),
+                7: ("5 сен", "19:00"), 8: ("12 сен", "14:00"), 9: ("16 сен", "18:30")},
+}
+
+def apply_time_overrides(games, club_key):
+    """Games are chronologically sorted with one match per round and no gaps,
+    so list position i (0-indexed) corresponds to round i+1."""
+    overrides = TIME_OVERRIDES.get(club_key, {})
+    for i, g in enumerate(games):
+        override = overrides.get(i + 1)
+        if override:
+            g["date"], g["time"] = override
+    return games
 
 STATIC_FIXTURES = {
     "spartak": {
         "Товарищеские матчи": [
-            _g("11 июл", "Локомотив", "Спартак", False),
+            _g("11 июл", "Локомотив", "Спартак", False, time="20:00"),
         ],
         "Суперкубок России": [
-            _g("18 июл", "Зенит", "Спартак", False),
+            _g("18 июл", "Зенит", "Спартак", False, time="19:30"),
         ],
         "РПЛ 26/27": [
             _g("25 июл", "Спартак", "Родина", True),
@@ -447,6 +473,7 @@ def build():
     sp_games  = fetch_rpl_fixtures(CLUBS_META["spartak"]["rf_team_id"], CLUBS_META["spartak"]["rf_league_id"]) \
                 or tsdb_team_games(tsdb_rpl_events, sp_tsdb_name) \
                 or STATIC_FIXTURES["spartak"]["РПЛ 26/27"]
+    sp_games  = apply_time_overrides(sp_games, "spartak")
     sp_cup_games = tsdb_team_games(tsdb_cup_events, sp_tsdb_name) \
                 or STATIC_FIXTURES["spartak"]["Кубок России 26/27"]
     sp_st     = fetch_rpl_standings(CLUBS_META["spartak"]["rf_league_id"], CLUBS_META["spartak"]["rf_team_id"])
@@ -476,6 +503,7 @@ def build():
     fk_games  = fetch_rpl_fixtures(CLUBS_META["fakel"]["rf_team_id"], CLUBS_META["fakel"]["rf_league_id"]) \
                 or tsdb_team_games(tsdb_rpl_events, fk_tsdb_name) \
                 or STATIC_FIXTURES["fakel"]["РПЛ 26/27"]
+    fk_games  = apply_time_overrides(fk_games, "fakel")
     fk_cup_games = tsdb_team_games(tsdb_cup_events, fk_tsdb_name) \
                 or STATIC_FIXTURES["fakel"]["Кубок России 26/27"]
     fk_st     = fetch_rpl_standings(CLUBS_META["fakel"]["rf_league_id"], CLUBS_META["fakel"]["rf_team_id"])

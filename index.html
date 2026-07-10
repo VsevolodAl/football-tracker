@@ -354,7 +354,7 @@ function render() {
     html += `<div class="section">
       <div class="section-header"><div class="section-title">Ближайший матч</div><div class="section-rule"></div></div>
       <div class="glass next-match-card">
-        <div class="nm-label"><span class="pulse"></span>Следующая игра · ${next.date} 2026</div>
+        <div class="nm-label"><span class="pulse"></span>Следующая игра · ${next.date} 2026${next.time?', '+next.time+' МСК':''}</div>
         <div class="match-teams">
           <div class="match-team-block">
             ${homeCrest ? `<img src="${homeCrest}" class="match-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}
@@ -398,7 +398,7 @@ function render() {
       const leftCrest  = hc ? club.crest : oppCrest;
       const rightCrest = ac ? club.crest : oppCrest;
       return `<div class="game-row">
-        <div class="game-date">${g.date}</div>
+        <div class="game-date">${g.date}${g.time?` <span style="opacity:.55">${g.time}</span>`:''}</div>
         <div class="game-teams-wrap">
           ${leftCrest ? `<img src="${leftCrest}" class="game-crest" alt="" loading="lazy" onerror="this.style.opacity='0'">` : ''}
           <div class="game-team ${hc?'bold':''}" title="${g.home}">${g.home}</div>
