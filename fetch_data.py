@@ -340,10 +340,31 @@ STATIC_FIXTURES = {
     },
 }
 
+# ── one-off diagnostic: is RFPL reachable on football-data.org with our key? ──
+
+def debug_check_rfpl():
+    if not FD_KEY:
+        print("  [DEBUG-RFPL] no FOOTBALLDATA_KEY, skipping")
+        return
+    data = fetch_json(
+        "https://api.football-data.org/v4/competitions/RFPL/teams",
+        {"X-Auth-Token": FD_KEY}
+    )
+    if not data:
+        print("  [DEBUG-RFPL] request failed, see [WARN] above")
+        return
+    teams = data.get("teams", [])
+    print(f"  [DEBUG-RFPL] accessible! {len(teams)} teams")
+    for t in teams:
+        print(f"    id={t['id']} name={t['name']} shortName={t.get('shortName')}")
+
 # ── assemble ─────────────────────────────────────────────────────────────────
 
 def build():
     out = {}
+
+    print("Checking football-data.org RFPL access …")
+    debug_check_rfpl()
 
     # ── Arsenal ──
     print("Fetching Arsenal / EPL …")
