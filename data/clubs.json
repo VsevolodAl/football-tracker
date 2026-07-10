@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-10T21:36:21.396484+00:00",
+  "updated": "2026-07-10T21:42:09.392281+00:00",
   "clubs": {
     "arsenal": {
       "name": "Арсенал",
@@ -17,6 +17,7 @@
         "АПЛ 26/27": [
           {
             "date": "21 авг",
+            "time": "22:00",
             "home": "Arsenal",
             "away": "Coventry City",
             "homeGame": true,
@@ -25,6 +26,7 @@
           },
           {
             "date": "31 авг",
+            "time": "22:00",
             "home": "Aston Villa",
             "away": "Arsenal",
             "homeGame": false,
@@ -33,6 +35,7 @@
           },
           {
             "date": "6 сен",
+            "time": "18:30",
             "home": "Arsenal",
             "away": "Chelsea",
             "homeGame": true,
@@ -41,6 +44,7 @@
           },
           {
             "date": "12 сен",
+            "time": "22:00",
             "home": "Sunderland",
             "away": "Arsenal",
             "homeGame": false,
@@ -49,6 +53,7 @@
           },
           {
             "date": "19 сен",
+            "time": "17:00",
             "home": "Brighton Hove",
             "away": "Arsenal",
             "homeGame": false,
@@ -57,6 +62,7 @@
           },
           {
             "date": "10 окт",
+            "time": "17:00",
             "home": "Arsenal",
             "away": "Leeds United",
             "homeGame": true,
@@ -65,6 +71,7 @@
           },
           {
             "date": "17 окт",
+            "time": "17:00",
             "home": "Nottingham",
             "away": "Arsenal",
             "homeGame": false,
@@ -73,6 +80,7 @@
           },
           {
             "date": "24 окт",
+            "time": "17:00",
             "home": "Arsenal",
             "away": "Everton",
             "homeGame": true,
@@ -81,6 +89,7 @@
           },
           {
             "date": "31 окт",
+            "time": "18:00",
             "home": "Liverpool",
             "away": "Arsenal",
             "homeGame": false,
@@ -89,6 +98,7 @@
           },
           {
             "date": "7 ноя",
+            "time": "18:00",
             "home": "Arsenal",
             "away": "Hull City",
             "homeGame": true,
@@ -97,6 +107,7 @@
           },
           {
             "date": "21 ноя",
+            "time": "18:00",
             "home": "Newcastle",
             "away": "Arsenal",
             "homeGame": false,
@@ -105,6 +116,7 @@
           },
           {
             "date": "28 ноя",
+            "time": "18:00",
             "home": "Arsenal",
             "away": "Man City",
             "homeGame": true,
@@ -113,6 +125,7 @@
           },
           {
             "date": "2 дек",
+            "time": "23:00",
             "home": "Brentford",
             "away": "Arsenal",
             "homeGame": false,
@@ -121,6 +134,7 @@
           },
           {
             "date": "5 дек",
+            "time": "18:00",
             "home": "Tottenham",
             "away": "Arsenal",
             "homeGame": false,
@@ -129,6 +143,7 @@
           },
           {
             "date": "12 дек",
+            "time": "18:00",
             "home": "Arsenal",
             "away": "Bournemouth",
             "homeGame": true,
@@ -137,6 +152,7 @@
           },
           {
             "date": "19 дек",
+            "time": "18:00",
             "home": "Arsenal",
             "away": "Man United",
             "homeGame": true,
@@ -145,6 +161,7 @@
           },
           {
             "date": "26 дек",
+            "time": "18:00",
             "home": "Crystal Palace",
             "away": "Arsenal",
             "homeGame": false,
@@ -153,6 +170,7 @@
           },
           {
             "date": "30 дек",
+            "time": "23:00",
             "home": "Fulham",
             "away": "Arsenal",
             "homeGame": false,
@@ -161,6 +179,7 @@
           },
           {
             "date": "2 янв",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Ipswich Town",
             "homeGame": true,
@@ -169,6 +188,7 @@
           },
           {
             "date": "6 янв",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Brentford",
             "homeGame": true,
@@ -177,6 +197,7 @@
           },
           {
             "date": "16 янв",
+            "time": "15:00",
             "home": "Hull City",
             "away": "Arsenal",
             "homeGame": false,
@@ -185,6 +206,7 @@
           },
           {
             "date": "23 янв",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Newcastle",
             "homeGame": true,
@@ -193,6 +215,7 @@
           },
           {
             "date": "30 янв",
+            "time": "15:00",
             "home": "Man City",
             "away": "Arsenal",
             "homeGame": false,
@@ -201,6 +224,7 @@
           },
           {
             "date": "6 фев",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Liverpool",
             "homeGame": true,
@@ -209,6 +233,7 @@
           },
           {
             "date": "10 фев",
+            "time": "15:00",
             "home": "Ipswich Town",
             "away": "Arsenal",
             "homeGame": false,
@@ -217,6 +242,7 @@
           },
           {
             "date": "20 фев",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Fulham",
             "homeGame": true,
@@ -225,6 +251,7 @@
           },
           {
             "date": "27 фев",
+            "time": "15:00",
             "home": "Man United",
             "away": "Arsenal",
             "homeGame": false,
@@ -233,6 +260,7 @@
           },
           {
             "date": "3 мар",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Crystal Palace",
             "homeGame": true,
@@ -241,6 +269,7 @@
           },
           {
             "date": "13 мар",
+            "time": "15:00",
             "home": "Chelsea",
             "away": "Arsenal",
             "homeGame": false,
@@ -249,6 +278,7 @@
           },
           {
             "date": "20 мар",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Sunderland",
             "homeGame": true,
@@ -257,6 +287,7 @@
           },
           {
             "date": "10 апр",
+            "time": "15:00",
             "home": "Coventry City",
             "away": "Arsenal",
             "homeGame": false,
@@ -265,6 +296,7 @@
           },
           {
             "date": "17 апр",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Aston Villa",
             "homeGame": true,
@@ -273,6 +305,7 @@
           },
           {
             "date": "24 апр",
+            "time": "15:00",
             "home": "Bournemouth",
             "away": "Arsenal",
             "homeGame": false,
@@ -281,6 +314,7 @@
           },
           {
             "date": "1 май",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Tottenham",
             "homeGame": true,
@@ -289,6 +323,7 @@
           },
           {
             "date": "8 май",
+            "time": "15:00",
             "home": "Leeds United",
             "away": "Arsenal",
             "homeGame": false,
@@ -297,6 +332,7 @@
           },
           {
             "date": "15 май",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Nottingham",
             "homeGame": true,
@@ -305,6 +341,7 @@
           },
           {
             "date": "23 май",
+            "time": "15:00",
             "home": "Everton",
             "away": "Arsenal",
             "homeGame": false,
@@ -313,6 +350,7 @@
           },
           {
             "date": "30 май",
+            "time": "15:00",
             "home": "Arsenal",
             "away": "Brighton Hove",
             "homeGame": true,
