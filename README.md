@@ -50,14 +50,13 @@
 ## Структура файлов
 
 ```
-football-tracker/
-├── index.html          # Сам сайт (читает data/clubs.json)
-├── fetch_data.py       # Скрипт загрузки данных с API
-├── data/
-│   └── clubs.json      # Данные (обновляются автоматически)
-└── .github/
-    └── workflows/
-        └── update.yml  # Расписание автообновления
+index.html          # Сам сайт (читает data/clubs.json)
+fetch_data.py       # Скрипт загрузки данных с API
+data/
+└── clubs.json      # Данные (обновляются автоматически)
+.github/
+└── workflows/
+    └── update.yml  # Расписание автообновления
 ```
 
 ## Расписание обновлений

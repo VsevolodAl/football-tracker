@@ -22,12 +22,12 @@ jobs:
         env:
           FOOTBALLDATA_KEY: ${{ secrets.FOOTBALLDATA_KEY }}
           APIFOOTBALL_KEY: ${{ secrets.APIFOOTBALL_KEY }}
-        run: python football-tracker/fetch_data.py
+        run: python fetch_data.py
 
       - name: Commit & push if data changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add football-tracker/data/clubs.json
+          git add data/clubs.json
           git diff --cached --quiet || git commit -m "chore: обновление данных $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
