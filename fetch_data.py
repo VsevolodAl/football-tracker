@@ -178,7 +178,11 @@ def fetch_rpl_fixtures(team_id, league_id):
         af_headers()
     )
     if not data or "response" not in data:
+        print(f"  [DEBUG] no 'response' key. keys={list(data.keys()) if data else None}")
         return []
+    if data.get("errors"):
+        print(f"  [DEBUG] API errors: {data['errors']}")
+    print(f"  [DEBUG] team={team_id} league={league_id} season={SEASON} results={data.get('results')}")
     games = []
     for m in data["response"]:
         fix     = m["fixture"]
