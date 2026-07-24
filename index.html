@@ -51,6 +51,17 @@ body.club-fakel    { background: linear-gradient(135deg, #005B99 0%, #003F72 45%
   padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,.15);
 }
 .updated-tag { display: inline-block; margin-top: 3px; margin-left: 6px; font-size: .68rem; color: rgba(255,255,255,.35); }
+.refresh-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; margin-left: 6px; vertical-align: -6px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.6);
+  cursor: pointer; transition: background .2s, color .2s;
+  padding: 0;
+}
+.refresh-btn:hover:not(:disabled) { background: rgba(255,255,255,.2); color: #fff; }
+.refresh-btn:disabled { opacity: .5; cursor: default; }
+.refresh-btn.spinning svg { animation: spin .8s linear infinite; }
 
 /* ── Club buttons ── */
 .club-selector { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; padding-top: 4px; }
@@ -205,6 +216,11 @@ body.club-fakel    { background: linear-gradient(135deg, #005B99 0%, #003F72 45%
         <h1 id="clubTitle">Арсенал</h1>
         <span class="season-tag" id="clubSeason">АПЛ · Сезон 2026/27</span>
         <span class="updated-tag" id="updatedAt"></span>
+        <button id="refreshBtn" class="refresh-btn" title="Обновить данные" onclick="refreshData()">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>
+          </svg>
+        </button>
       </div>
     </div>
     <div class="club-selector" id="clubSelector"></div>
@@ -230,11 +246,11 @@ function crestImg(url, cls, alt, size) {
 // ── Load ──────────────────────────────────────────────────────────────────
 async function loadData() {
   try {
-    const res = await fetch(`data/clubs.json?v=${Date.now()}`);
+    const res = await fetch(`/api/data?v=${Date.now()}`);
     if (!res.ok) throw new Error(res.status);
     DATA = await res.json();
   } catch(e) {
-    document.getElementById('loading').innerHTML =
+    document.getElementById('mainContent').innerHTML =
       `<div class="no-data"><strong>Не удалось загрузить данные</strong>Проверьте соединение и обновите страницу</div>`;
     return;
   }
@@ -243,10 +259,26 @@ async function loadData() {
     document.getElementById('updatedAt').textContent =
       `обновлено ${d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})} ${d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}`;
   }
+  const prevClub = DATA.clubs[activeClub] ? activeClub : 'arsenal';
+  activeClub = prevClub;
   buildClubButtons();
-  activeTournament = DATA.clubs[activeClub].tournaments[0];
+  if (!DATA.clubs[activeClub].tournaments.includes(activeTournament)) {
+    activeTournament = DATA.clubs[activeClub].tournaments[0];
+  }
   applyTheme(activeClub);
   render();
+}
+
+async function refreshData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.classList.add('spinning');
+  try {
+    await loadData();
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('spinning');
+  }
 }
 
 // ── Theme ─────────────────────────────────────────────────────────────────
